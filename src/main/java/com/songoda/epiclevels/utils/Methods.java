@@ -3,12 +3,12 @@ package com.songoda.epiclevels.utils;
 import com.songoda.epiclevels.settings.Settings;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Methods {
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###.###");
-    private static final Map<String, DecimalFormat> FORMATS = new HashMap<>();
+    private static final Map<String, DecimalFormat> FORMATS = new ConcurrentHashMap<>();
 
     public static String formatDecimal(double decimal) {
         return DECIMAL_FORMAT.format(decimal);
