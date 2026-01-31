@@ -5,6 +5,7 @@ import com.songoda.core.configuration.Config;
 import com.songoda.core.configuration.ConfigSetting;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.epiclevels.EpicLevels;
+import com.songoda.epiclevels.players.EPlayer;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -145,6 +146,9 @@ public class Settings {
             "The enabled language file.",
             "More language files (if available) can be found in the plugins data folder.");
 
+    public static final ConfigSetting LOAD_ALL_PLAYERS = new ConfigSetting(CONFIG, "Data.Load All Players", true,
+            "Set to 'true' to bulk load players when server starts.");
+
     /**
      * In order to set dynamic economy comment correctly, this needs to be
      * called after EconomyManager load
@@ -175,5 +179,6 @@ public class Settings {
         }
 
         CONFIG.saveChanges();
+        EPlayer.reload();
     }
 }

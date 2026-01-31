@@ -260,8 +260,10 @@ public class DataHelper {
                         .returning(DSL.field("id", SQLDataType.INTEGER.identity(true)))
                         .fetch();
 
-                int boostId = insertedBoost.get(0).get("id", int.class);
-                runSync(() -> boost.setId(boostId));
+                if (insertedBoost.size() > 0) {
+                    int boostId = insertedBoost.get(0).get("id", int.class);
+                    runSync(() -> boost.setId(boostId));
+                }
             });
         });
     }

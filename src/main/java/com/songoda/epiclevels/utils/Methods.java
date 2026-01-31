@@ -3,12 +3,27 @@ package com.songoda.epiclevels.utils;
 import com.songoda.epiclevels.settings.Settings;
 
 import java.text.DecimalFormat;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Methods {
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###.###");
+    private static final Map<String, DecimalFormat> FORMATS = new ConcurrentHashMap<>();
 
     public static String formatDecimal(double decimal) {
         return DECIMAL_FORMAT.format(decimal);
+    }
+
+    public static String formatDecimal(double decimal, String format) {
+        if (format == null) {
+            return formatDecimal(decimal);
+        }
+        DecimalFormat decimalFormat = FORMATS.get(format);
+        if (decimalFormat == null) {
+            decimalFormat = new DecimalFormat(format);
+            FORMATS.put(format, decimalFormat);
+        }
+        return decimalFormat.format(decimal);
     }
 
     public static String generateProgressBar(double exp, double nextLevel, boolean placeholder) {

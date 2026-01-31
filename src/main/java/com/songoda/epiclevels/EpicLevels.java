@@ -30,6 +30,7 @@ import com.songoda.epiclevels.listeners.DeathListeners;
 import com.songoda.epiclevels.listeners.LoginListeners;
 import com.songoda.epiclevels.managers.EntityManager;
 import com.songoda.epiclevels.placeholder.PlaceholderManager;
+import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.players.PlayerManager;
 import com.songoda.epiclevels.settings.Settings;
 import com.songoda.epiclevels.tasks.BoostTask;
@@ -140,11 +141,16 @@ public class EpicLevels extends SongodaPlugin {
     }
 
     @Override
-    public void onDataLoad() {
+    public synchronized void onDataLoad() {
+        if (this.dataHelper != null) {
+            return;
+        }
         initDatabase(new _1_InitialMigration(), new _2_MakeBoostTableAutoIncrementMigration());
         this.dataHelper = new DataHelper(this);
 
-        this.dataHelper.getPlayers((player) -> this.playerManager.addPlayers(player));
+        if (Settings.LOAD_ALL_PLAYERS.getBoolean(false)) {
+            this.dataHelper.getPlayers((player) -> this.playerManager.addPlayers(player));
+        }
         this.dataHelper.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
     }
 
@@ -152,6 +158,8 @@ public class EpicLevels extends SongodaPlugin {
     public void onConfigReload() {
         this.setLocale(getConfig().getString("System.Language Mode"), true);
         this.locale.reloadMessages();
+
+        EPlayer.reload();
 
         // Loading levels
         this.levelManager.load(this);
@@ -193,6 +201,9 @@ public class EpicLevels extends SongodaPlugin {
     }
 
     public DataHelper getDataHelper() {
+        if (this.dataHelper == null) {
+            onDataLoad();
+        }
         return this.dataHelper;
     }
 
